@@ -4,8 +4,11 @@ Vagrant.configure("2") do |config|
     vb.memory = "256"
     vb.gui = false
   end
-  config.vm.define "node1" do |node|
+  config.vm.define "master" do |node|
     node.vm.network "public_network", ip:"10.0.0.5"
+    node.vm.provision "ansible" do |ansible|
+      ansible.playbook = "create_cluster.yml"
+    end
   end
   config.vm.define "node2" do |node|
     node.vm.network "public_network", ip:"10.0.0.6"

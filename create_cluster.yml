@@ -1,0 +1,11 @@
+---
+- name: create the MPI cluster
+  hosts: all
+  become: yes
+  gather_facts: no
+  tasks:
+    - name: modify hosts file to declare the cluster
+      copy:
+        src: "./hosts"
+        dest: "/etc/hosts"
+    
