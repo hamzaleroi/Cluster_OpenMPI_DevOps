@@ -1,0 +1,4 @@
+[vms]
+{% for host in hosts %}
+{{host}} ansible_user={{user}}
+{% endfor %}
