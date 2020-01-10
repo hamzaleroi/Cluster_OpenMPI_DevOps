@@ -1,0 +1,38 @@
+---
+
+
+- name: create the user mpi-user
+  become: true
+  user:
+    name: "{{username}}"
+    state: present
+    password: "{{ password | string | password_hash('sha512')}}"
+    create_home: yes
+    group: sudo
+    shell: "/bin/bash"
+- name: change the hostname
+  tags: hostname
+  become: yes
+  hostname:
+    name: "{{inventory_hostname}}"
+- name: generate rsa keys
+  become: true
+  user:
+    name: "{{username}}"
+    generate_ssh_key: yes
+    ssh_key_bits: 1024
+    ssh_key_file: "/home/{{username}}/.ssh/id_rsa"
+  notify: 
+    - set rsa key
+    - set authorized keys
+    - restart ssh
+- name: copying localhost's rsa keys
+  tags:
+    - copy
+  become: yes
+  copy:
+    src: "~/.ssh/id_rsa.pub"
+    dest: "/home/{{username}}/.ssh/authorized_keys"
+  notify:
+    - set authorized keys
+    - restart ssh

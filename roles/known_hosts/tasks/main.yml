@@ -1,0 +1,27 @@
+--- 
+ 
+- name: gathering facts
+  tags: gather
+  setup:
+    filter: "{{interface}}"
+  register: out
+- name: fetching public keys
+  tags: fetching
+  delegate_to: localhost
+  copy:
+    content: "{{ lookup('pipe', 'ssh-keyscan -trsa  ' + out.ansible_facts[interface].ipv4.address) }}"
+    dest: "./public_keys/{{inventory_hostname}}.pub"
+- name: deleting the file
+  tags: deleting
+  delegate_to: localhost
+  file:
+    path: "/home/hamza/.ssh/known_hosts"
+    state: absent
+- name: assembling keys in one file
+  tags: assembling
+  delegate_to: localhost
+  become: no
+  assemble:
+    src: "./public_keys/"
+    regexp: "pub$"
+    dest: "/home/hamza/.ssh/known_hosts" 

@@ -1,0 +1,16 @@
+---
+
+- name: gathering facts
+  tags: gather
+  setup:
+    filter: "{{interface}}"
+  register: out
+- name: registering data
+  tags: register
+  delegate_to: localhost
+  become: no
+  copy:
+    content: "ansible_host: {{out.ansible_facts[interface].ipv4.address}}\nansible_port: 22"
+    dest: "./host_vars/{{inventory_hostname}}"
+  notify:
+    - create global inventory file

@@ -1,0 +1,50 @@
+--- 
+- name: configure mpi 
+  hosts: all
+  gather_facts: no
+  become: yes
+  
+  
+  tasks:
+    - name: installing necessary packages
+      become: true
+      apt:
+        name:
+          - build-essential
+          - gcc-multilib
+          - openmpi-bin
+          - openmpi-doc
+          - libopenmpi-dev
+        state: latest
+    - name: configure hosts file for the master
+      copy:
+        src: "hosts"
+        dest: "/etc/hosts"
+    
+    # - name: gathering facts
+    #   tags: gather
+    #   setup:
+    #     filter: "ansible_eth1"
+    #   register: out
+    # - name: fetching public keys
+    #   tags: fetching
+    #   become: yes
+    #   delegate_to: localhost
+    #   copy:
+    #     # src: "/home/{{username}}/.ssh/id_rsa.pub"
+    #     content: "{{ lookup('pipe', 'ssh-keyscan -trsa  ' + out.ansible_facts.ansible_eth1.ipv4.address) }}"
+    #     dest: "./public_keys/{{inventory_hostname}}.pub"
+    #     # flat: yes
+    # - name: deleting the file
+    #   tags: deleting
+    #   delegate_to: localhost
+    #   file:
+    #     path: "/home/hamza/.ssh/known_hosts"
+    #     state: absent
+    # - name: assembling keys in one file
+    #   tags: assembling
+    #   delegate_to: localhost
+    #   assemble:
+    #     src: "./public_keys/"
+    #     regexp: "pub$"
+    #     dest: "/home/hamza/.ssh/known_hosts"  

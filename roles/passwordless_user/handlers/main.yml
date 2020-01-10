@@ -1,0 +1,19 @@
+---
+- name: set rsa key
+  become: yes
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^HostKey /etc/ssh/ssh_host_rsa_key"
+    line: "HostKey /home/{{username}}/.ssh/id_rsa"
+- name: set authorized keys 
+  become: yes
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    insertbefore: "#AuthorizedKeysFile"
+    firstmatch: yes
+    line: "AuthorizedKeysFile     /home/{{username}}/.ssh/authorized_keys"
+- name: restart ssh
+  become: yes
+  service:
+    name: ssh
+    state: restarted

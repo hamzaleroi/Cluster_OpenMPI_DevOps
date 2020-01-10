@@ -1,0 +1,10 @@
+- name:  create global inventory file
+  delegate_to: localhost
+  tags: assemble
+  vars:
+    hosts: "{{hostvars}}"
+    user: "{{username}}"
+  template:
+    src: "./hosts.j2"
+    dest: "./hosts.ini"
+    force: yes

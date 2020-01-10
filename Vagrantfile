@@ -4,7 +4,8 @@ Vagrant.configure("2") do |config|
     vb.memory = "256"
     vb.gui = false
   end
-  config.vm.define "node2" do |node|
+  config.vm.synced_folder "./mpi_program", "/mpi_program"
+  config.vm.define "node1" do |node|
     node.vm.network "private_network", ip:"10.0.0.6"
   end
   config.vm.define "master" do |node|

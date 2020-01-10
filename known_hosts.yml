@@ -1,0 +1,43 @@
+--- 
+- name: configure mpi 
+  hosts: all
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: gathering facts
+      tags: gather
+      setup:
+        filter: "ansible_eth1"
+      register: out
+    - name: fetching public keys
+      tags: fetching
+      become: yes
+      delegate_to: localhost
+      copy:
+        content: "{{ lookup('pipe', 'ssh-keyscan -trsa  ' + out.ansible_facts.ansible_eth1.ipv4.address) }}"
+        dest: "./public_keys/{{inventory_hostname}}.pub"
+    - name: deleting the file
+      tags: deleting
+      delegate_to: localhost
+      file:
+        path: "~/.ssh/known_hosts"
+        state: absent
+    - name: deleting old keys
+      tags: deleting
+      delegate_to: localhost
+      file:
+        path: "./public_keys/"
+        state: absent
+    - name: create the folder for keys
+      tags: deleting
+      delegate_to: localhost
+      file:
+        path: "./public_keys/"
+        state: present
+    - name: assembling keys in one file
+      tags: assembling
+      delegate_to: localhost
+      assemble:
+        src: "./public_keys/"
+        regexp: "pub$"
+        dest: "~/.ssh/known_hosts"
