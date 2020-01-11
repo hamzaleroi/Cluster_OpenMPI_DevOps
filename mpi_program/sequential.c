@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#define SIZE 50000000
+#define SIZE 1000
 
 
 int main(int argc, char const *argv[])
