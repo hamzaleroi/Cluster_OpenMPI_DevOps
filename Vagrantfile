@@ -4,7 +4,8 @@ Vagrant.configure("2") do |config|
     vb.memory = "256"
     vb.gui = false
   end
-  config.vm.synced_folder "./mpi_program", "/mpi_program"
+  config.ssh.password = "vagrant"
+  config.vm.synced_folder "./mpi_program", "/mpi_program", type: "nfs", mode: "0666"
   config.vm.define "node1" do |node|
     node.vm.network "private_network", ip:"10.0.0.6"
   end

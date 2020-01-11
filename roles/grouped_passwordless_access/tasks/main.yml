@@ -1,0 +1,22 @@
+---
+
+- name: fetching all the public keys
+  fetch:
+    src: "~/.ssh/id_rsa.pub"
+    dest: "./rsa_keys/{{inventory_hostname}}.pub"
+    flat: yes
+- name: assembling the keys in one file
+  delegate_to:  localhost
+  assemble:
+    src: "./rsa_keys/"
+    regexp: "pub$"
+    dest: "./authorized_keys"
+  notify:
+    - restart ssh
+- name: appending to the authorized_keys file
+  blockinfile:
+    block: "{{ lookup('file', './authorized_keys') }}"
+    path: "~/.ssh/authorized_keys"
+    force: yes
+  notify:
+    - restart ssh
