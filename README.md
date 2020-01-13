@@ -12,7 +12,7 @@ Ansible: Used for provisionning and configuration management
 Vagrant: Used to create the developement environement on which all the work will be applied  
 
 ## Tasks ensured by the project:  
-* Create a user with an identifier "mpi-user" and password "12345678"
+* Create a user with an identifier "**mpi-user**" and password "**12345678**"
 * Ensure the connection is passwordless
 * Create Ansible inventory locally to allow any further configuration
 * Ensure the hosts are considered known by the host
@@ -25,11 +25,17 @@ Vagrant: Used to create the developement environement on which all the work will
 
 ## Provisioning the VMs:  
 To start working on the project, execute the following command:
-```shell
+```bash
 vagrant up
 ```
 This command will first create the VMs and then start the provisionning using Ansible which will do the rest of the job
 
+## Setting Machines as known on the host:  
+
+To do that simply execute the playbook `known_hosts.yml` using the command:
+```bash
+ansible-playbook known_hosts.yml --vault-password-file password
+```  
 ## Configuring the VMs:  
 After the provisionning comes the configuration. To do that here's the command to execute on a shell:  
 ```bash
@@ -39,12 +45,12 @@ The password and the username has been encrypted inside the playbooks as part of
 the file password which have been left unencrypted to allow other users to use the playbooks (since this is a public repo). Ideally, you would store your passwords somewhere else safe. 
 
 ### Note:  
-The access provided by _vagrant ssh_ has been overloaded in the configuration phase and that's because 
-the rsa key that has been configured is the one that has been generated for the new user _mpi-user_. You can still have access 
-to these machines with that command; because the user still exists and the password for it is _vagrant_.  
+The access provided by `vagrant ssh` has been overloaded in the configuration phase and that's because 
+the rsa key that has been configured is the one that has been generated for the new user __mpi-user__. You can still have access 
+to these machines with that command; because the user still exists and the password for it is __vagrant__.  
 
 ## Working with OpenMPI:  
-A folder has been created _/mpi-program_, which is a shared NFS folder. You can either code on the host or on the guets, but the execution will always be on the master node.
+A folder has been created `/mpi-program`, which is a shared NFS folder. You can either code on the host or on the guets, but the execution will always be on the master node.
 
 ## Mesuring performance:  
 In the shared folder, there exists 2 versions of a program that calculates the dot function of two vectors. One is sequential and the other is parallel. The parallel can be executed on the cluster. The parallel program can also be forced to be sequential if we execute it on one single node. There is also
