@@ -17,7 +17,23 @@
           - openmpi-doc
           - libopenmpi-dev
         state: latest
-    - name: configure hosts file for the master
+    - name: creating base host file
+      delegate_to: localhost
+      vars:
+        ipv4_addresses: yes
+        ipv6_addresses: no
+      template: 
+        src: "./hosts.conf.j2"
+        dest: "./hosts"
+    - name: adding all the hosts in one file
+      tags: construct_hosts_file
+      become: no
+      delegate_to: localhost
+      lineinfile:
+        path: "hosts"
+        insertbefore: "## END OF IPV4 ADDRESSES ##"
+        line: "{{ansible_host}}   {{inventory_hostname}}"
+    - name: copying the host file to all the machines
       become: yes
       copy:
         src: "hosts"

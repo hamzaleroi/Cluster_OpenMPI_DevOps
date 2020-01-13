@@ -1,0 +1,7 @@
+---
+- name: make the hosts accessible from the outside
+  hosts: all
+  gather_facts: no
+  roles:
+  - {role: known_hosts, interface: "ansible_eth1" }
+    

@@ -20,5 +20,4 @@
   roles:
   - {role: passwordless_user, username: "{{username_}}", password: "{{password_}}"}
   - {role: create_inventory, tags: ["register"], interface: "ansible_eth1", username: "{{username_}}"}
-  - {role: known_hosts, interface: "ansible_eth1" }
     
