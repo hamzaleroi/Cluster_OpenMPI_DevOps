@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "master" do |node|
     node.vm.network "private_network", ip:"10.0.0.5"
     node.vm.provision "ansible" do |ansible|
-      ansible.playbook = "create_cluster.yml"
+      ansible.playbook = "site.yml"
       ansible.limit = "all"
       ansible.vault_password_file = "password"
     end
